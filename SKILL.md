@@ -69,7 +69,7 @@ If more than 5 items exist for ✅, group related items into a single line.
 
 ## Label Tags for Multi-Task Sessions
 
-When a session spans multiple tasks or projects, prefix items in ALL sections (✅, 🚧, ❌, ➡️) with a 【label】 tag (e.g. 【dawn-patrol】, 【CLAUDE.md】). Omit labels when all items belong to one task.
+ALL items in ALL sections (✅, 🚧, ❌, ➡️) MUST have a 【label】 tag. No exceptions.
 
 ## Quality Criteria for ➡️ Next
 
