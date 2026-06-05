@@ -26,19 +26,33 @@ task manager (via MCP), with a 7-day age-out that prevents items from silently r
 
 1. Copy `SKILL.md` to `~/.claude/skills/git-session-handoff/SKILL.md`
 2. Copy `examples/worked-examples.md` to `~/.claude/skills/git-session-handoff/examples/worked-examples.md`
-3. Copy the three files in `commands/` to `~/.claude/commands/`
+3. Copy the two files in `commands/` to `~/.claude/commands/`
 4. Append the following block to `~/.claude/CLAUDE.md`:
 
 ```
 ## Git Session Handoff
 
-REQUIRED first action of every session: run
-`git log -5 --invert-grep --extended-regexp --grep="^chore: session start" --format="=== %h %s%n%b"`,
-read the most recent ➡️ Next, then `git commit --allow-empty -F <tmpfile>` a session start.
+REQUIRED first action of every session:
+
+0. Run in one call:
+   - `git status`
+   - `cat ~/.claude/handoff.md 2>/dev/null`
+   - `git log -5 --invert-grep --extended-regexp --grep="^chore: session start" --format="=== %h %s%n%b"`
+
+1. If uncommitted changes detected: show diff summary and ask
+   "⚠️ Uncommitted changes detected. Commit these? (Y/n)"
+
+2. If handoff.md non-empty and <24h old: display contents, then delete the file.
+   If >24h old: skip with "⚠️ Stale handoff note — skipping."
+
+3. Display Session Brief from git log output.
+
+4. Start working. No session start commit.
+
 All commits: follow the git-session-handoff skill for format and task gate rules.
 ```
 
-5. Edit `commands/session-end.md`: replace `YOUR_MCP_TOOL_NAME` with your task management
+5. Edit `commands/close.md`: replace `YOUR_MCP_TOOL_NAME` with your task management
    MCP tool (e.g. `mcp__claude_ai_Notion__notion-create-pages`).
 6. Run `git config --global i18n.commitEncoding utf-8` (required for emoji integrity).
 
@@ -69,7 +83,6 @@ See [examples/worked-examples.md](examples/worked-examples.md) for full realisti
 
 | Command | Purpose |
 |---|---|
-| `/session-start` | Read git log, check handoff note, triage open items, create session start commit |
 | `/checkpoint` | Mid-session commit capturing current state |
 | `/close` | Final commit with full task management gate evaluation + handoff note (recommended at session close) |
 
@@ -109,23 +122,19 @@ START                              START
   ├─ git log -5 (filtered)           ├─ git log -5 (filtered)
   │    └─ Read most recent ➡️ Next   │    └─ Read most recent ➡️ Next
   │                                  │
-  ├─ git commit --allow-empty        │
-  │    └─ "chore: session start"     │
-  │       Triage + plan recorded     │
-  │                                  │
   ├─ ... work ...                    ├─ ... work ...
   │                                  │
   ├─ feat/fix/refactor commit        │
   │    └─ Structured body            │
   │       (✅ 🚧 ❌ ➡️)              │
   │                                  │
-  └─ /session-end                    │
+  └─ /close                          │
        └─ Final commit + gate eval   │
 ```
 
-The `--invert-grep` filter in the session start command excludes `chore: session start` commits
-from the context window (they are retained in history for time tracking but don't carry useful
-state). This keeps the 5-commit window filled with meaningful work commits.
+The `--invert-grep` filter excludes legacy `chore: session start` commits from the context
+window. Session start commits are no longer created; the filter exists for backward
+compatibility with older history.
 
 ## Task Management Gate
 
@@ -151,7 +160,7 @@ git log --format="%s" --since="last monday" | cut -d: -f1 | sort | uniq -c
 git log --all --grep="❌" --format="%h %s%n%b"
 ```
 
-`chore: session start` commits are the authoritative session boundaries.
+Git commit timestamps provide the authoritative session boundaries.
 
 ## License
 

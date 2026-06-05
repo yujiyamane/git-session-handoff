@@ -49,7 +49,7 @@ multi-line bodies — shell argument parsing mangles multi-line strings and emoj
 | `feat` | New functionality |
 | `fix` | Bug fix |
 | `refactor` | Code restructure without behaviour change |
-| `chore` | Session start, checkpoint, config, maintenance |
+| `chore` | Checkpoint, config, maintenance |
 | `style` | Formatting, CSS, layout, visual polish |
 | `docs` | Documentation, spec updates |
 | `test` | Test-only changes |
@@ -84,23 +84,6 @@ this item by reading only the commit message?
 | ✓ Actionable | "Add `testCompassEdgeCases` — verify `degreesToCompass_(360)` returns 'N' not undefined" |
 
 ## Special Commit Types
-
-### Session Start Commit
-
-No code changes. `--allow-empty` is mandatory.
-
-    git commit --allow-empty -F <tmpfile>
-
-Body:
-
-    chore: session start — <primary goal>
-    
-    ✅ Completed:
-    - Read git log -5: identified N open items from previous sessions
-    - Decision: <priority order and rationale>
-    
-    ➡️ Next:
-    - <first task to begin>
 
 ### Checkpoint Commit (mid-session)
 
@@ -201,11 +184,12 @@ Run at every session start to read previous context:
 
 - `-5` limits to 5 most recent non-session-start commits
 - `--invert-grep` filters out `chore: session start` commits (retained in history for
-  time tracking, excluded from context read to keep the window useful)
+  backward compatibility — session start commits are no longer created, but the filter
+  remains so older history is excluded from the context read)
 - `--extended-regexp --grep="^chore: session start"` anchors to subject line prefix only
 - `=== %h %s` separator makes multi-commit output parseable
 
-Read the most recent ➡️ Next, then create the session start commit immediately.
+Read the most recent ➡️ Next and evaluate any STILL OPEN items for age-out. No session start commit is created — start working immediately.
 
 ## Handoff Note
 
