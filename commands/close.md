@@ -1,5 +1,5 @@
 ---
-description: "Close session: commit structured handoff, evaluate task gate, push, then close or open a new session"
+description: "Close session: commit structured handoff, evaluate task gate, write handoff note, push"
 allowed-tools:
   - Bash(git add:*)
   - Bash(git status:*)
@@ -23,6 +23,22 @@ For qualifying items:
   3. Record in 📤 Promoted to Task Manager block
 Write commit message to a temporary UTF-8 file.
 Execute `git commit -F <tmpfile>` (or `--allow-empty` if no staged changes).
+
+Handoff note: if session was complex (3+ files changed, or ❌ Failed present,
+or 🚧 In Progress present), write ~/.claude/handoff.md in UTF-8:
+
+    📝 Handoff Note
+    Current state:
+    - <what I was working on and where I got to>
+    Key decisions:
+    - <why approach X was chosen over Y>
+    Watch out:
+    - <traps, edge cases, things that almost worked>
+    Key files:
+    - <file:line references for next session>
+
+If session was simple (none of the heuristics met): skip this step.
+
 Execute `git push`.
 Output: "✅ Session committed and pushed. Close or open a new session."
 

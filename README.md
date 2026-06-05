@@ -69,9 +69,35 @@ See [examples/worked-examples.md](examples/worked-examples.md) for full realisti
 
 | Command | Purpose |
 |---|---|
-| `/session-start` | Read git log, triage open items, create session start commit |
+| `/session-start` | Read git log, check handoff note, triage open items, create session start commit |
 | `/checkpoint` | Mid-session commit capturing current state |
-| `/session-end` | Final commit with full task management gate evaluation (recommended at session close) |
+| `/close` | Final commit with full task management gate evaluation + handoff note (recommended at session close) |
+
+## Handoff Notes
+
+For complex sessions, `/close` writes `~/.claude/handoff.md` — an ephemeral note carrying
+nuance that doesn't fit in a commit body (current mental model, key file locations, traps
+to avoid, reasoning behind decisions).
+
+**Lifecycle:** Written by `/close`, read and atomically cleared by the next session start.
+Skipped automatically if the file is older than 24 hours (handles crashed sessions).
+
+**When it's written:** Claude applies three heuristics at close time — if any are true, the
+handoff note is written; otherwise it's skipped and the commit body is sufficient:
+- Session touched 3+ files
+- ❌ Failed items present (active debugging session)
+- 🚧 In Progress items present (partial execution)
+
+**Format:**
+
+    📝 Handoff Note
+    Current state:   — where you got to
+    Key decisions:   — why X over Y
+    Watch out:       — traps and edge cases
+    Key files:       — file:line refs for next session
+
+The file lives in `~/.claude/` (outside any project repo — no `.gitignore` needed).
+Encoding: UTF-8.
 
 ## How it works
 

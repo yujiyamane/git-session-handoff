@@ -206,3 +206,27 @@ Run at every session start to read previous context:
 - `=== %h %s` separator makes multi-commit output parseable
 
 Read the most recent ➡️ Next, then create the session start commit immediately.
+
+## Handoff Note
+
+When closing a session, `/close` may write `~/.claude/handoff.md` with detailed
+context for the next session. This is separate from the commit body.
+
+### Heuristics (Claude decides):
+- Session touched 3+ files → write handoff note
+- ❌ Failed items present (active debugging) → write handoff note
+- 🚧 In Progress items present (partial execution) → write handoff note
+- None of the above → skip, commit body is sufficient
+
+### Format:
+    📝 Handoff Note
+    Current state:
+    - <what I was working on and where I got to>
+    Key decisions:
+    - <why approach X was chosen over Y>
+    Watch out:
+    - <traps, edge cases, things that almost worked>
+    Key files:
+    - <file:line references for next session>
+
+Written in UTF-8. Read and cleared atomically on next session start (copy to temp → delete original → display from temp). Skipped if >24 hours old.
