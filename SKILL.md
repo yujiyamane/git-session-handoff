@@ -193,14 +193,10 @@ Read the most recent ➡️ Next and evaluate any STILL OPEN items for age-out. 
 
 ## Handoff Note
 
-When closing a session, `/close` may write `~/.claude/handoff.md` with detailed
+When closing a session, `/close` always writes `~/.claude/handoff.md` with detailed
 context for the next session. This is separate from the commit body.
 
-### Heuristics (Claude decides):
-- Session touched 3+ files → write handoff note
-- ❌ Failed items present (active debugging) → write handoff note
-- 🚧 In Progress items present (partial execution) → write handoff note
-- None of the above → skip, commit body is sufficient
+Handoff note is always written by /close. Keep it concise — focus on what the next session needs to know.
 
 ### Format:
     📝 Handoff Note

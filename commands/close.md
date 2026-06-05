@@ -33,7 +33,7 @@ Task management gate (MCP calls only when criteria met — usually 0):
 **Call 2 — Commit, handoff, push (one bash call):**
 Chain all of the following in a single bash call:
 - Write commit message to `/tmp/gsh_commit.txt`
-- If heuristics met (3+ files changed OR ❌ present OR 🚧 present): write `~/.claude/handoff.md` in UTF-8
+- Always write `~/.claude/handoff.md` in UTF-8. No heuristics check.
 - `git commit -F /tmp/gsh_commit.txt` (use `--allow-empty` if exploration-only)
 - `git push`
 - `rm -f /tmp/gsh_commit.txt`
