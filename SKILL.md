@@ -67,6 +67,10 @@ multi-line bodies — shell argument parsing mangles multi-line strings and emoj
 The max-items rule keeps commit bodies within the ~1,000 token session-start budget.
 If more than 5 items exist for ✅, group related items into a single line.
 
+## Label Tags for Multi-Task Sessions
+
+When a session spans multiple tasks or projects, prefix items in ALL sections (✅, 🚧, ❌, ➡️) with a 【label】 tag (e.g. 【dawn-patrol】, 【CLAUDE.md】). Omit labels when all items belong to one task.
+
 ## Quality Criteria for ➡️ Next
 
 Each item must be actionable without further context. Test: could a fresh session execute

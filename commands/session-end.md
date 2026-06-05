@@ -22,3 +22,9 @@ For qualifying items:
   3. Record in 📤 Promoted to Task Manager block
 Write commit message to a temporary UTF-8 file.
 Execute `git commit -F <tmpfile>` (or `--allow-empty` if no staged changes).
+
+Rules:
+- When a session spans multiple tasks or projects, prefix items in ALL sections (✅, 🚧, ❌, ➡️) with a 【label】 tag (e.g. 【feature-x】, 【config】). Omit labels when all items belong to one task.
+- Every ➡️ item must be executable by a fresh session from the commit message alone.
+- ✅ must reference actual function names, file paths, or test names.
+- ❌ must include WHY it failed, not just what was tried.
